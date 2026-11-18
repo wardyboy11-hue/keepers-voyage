@@ -606,11 +606,11 @@
 
   /* ----- Character sprites (original art) or photos (photos stay on this phone only) ----- */
   function kitKey() { return (window.KVChar && KVChar.KITS[state.kit]) ? state.kit : 'green'; }
+  var ART = { save: 'ell_save', ready: 'ell_ready', win: 'ell_win', bounce: 'ell_bounce', fishing: 'ell_fishing', study: 'ell_study', calm: 'ell_calm' };
   function figure(pose, extra) {
-    if (!window.KVChar) return '';
-    var o = { pose: pose, kit: kitKey(), label: 'Ell, the keeper' };
-    for (var x in extra) o[x] = extra[x];
-    return KVChar.svg(o);
+    var f = ART[pose] || ART.ready;
+    if (extra && extra.bust) return '<img class="kvart" alt="Ell" src="assets/' + f + '.png" style="object-fit:cover;object-position:top center;width:100%;height:100%">';
+    return '<img class="kvart" alt="Ell, the keeper" src="assets/' + f + '.png">';
   }
   function charHtml(mood, big) {
     var m = MOODS[mood] || MOODS.ready;
@@ -637,7 +637,7 @@
     ];
     var html = '<div class="card"><h2>👥 9 a side squad notes</h2><p class="muted">These stay on your phone. Use them before matches to plan distribution.</p>';
     players.forEach(function (p) {
-      html += '<div class="card tight mate"><div class="matefig">' + (window.KVChar ? KVChar.mate(p.name, p.pos === 'Other GK' ? 'ready' : 'ready', { bust: true }) : '') + '</div><div><strong>' + esc(p.name) + '</strong> <span class="tag">' + esc(p.pos) + '</span><p>' + esc(p.notes) + '</p></div></div>';
+      html += '<div class="card tight mate"><div class="matefig">' + '' + '</div><div><strong>' + esc(p.name) + '</strong> <span class="tag">' + esc(p.pos) + '</span><p>' + esc(p.notes) + '</p></div></div>';
     });
     html += '<div class="card"><h3>🎯 Your key habits</h3><ul>' +
       '<li>Scan both options before you receive or release. Do not get into a rhythm of always going the same way.</li>' +
@@ -786,7 +786,7 @@
         '<div class="row" style="justify-content:center;margin-top:10px"><span class="tag red">🔥 Streak ' + dispStreak() + '</span><span class="tag gold">Best ' + state.best + '</span><span class="tag">Logs this week: ' + weekCount + '</span></div>' +
       '</div>' +
       '<div class="card tight" style="text-align:center">' + charHtml(allDone ? 'win' : 'ready') + '<button class="btn small blue" data-act="go" data-view="bounce">Having a tough day? Bounce back</button></div>' +
-      '<div class="card tight"><h3 style="margin:0">Your crew</h3><div class="crew">' + ['Gino', 'Isaac', 'Archie', 'Harvey', 'Jax'].map(function (n) { return '<div style="text-align:center"><div class="matefig">' + (window.KVChar ? KVChar.mate(n, 'ready', { bust: true }) : '') + '</div><small>' + n + '</small></div>'; }).join('') + '</div><button class="btn small blue block" data-act="go" data-view="squad">Squad notes</button></div>' +
+      '<div class="card tight"><h3 style="margin:0">Your crew</h3><img class="crewpic" alt="Ell\'s team mates" src="assets/ell_crew.png"><button class="btn small blue block" data-act="go" data-view="squad">Squad notes</button></div>' +
       '<div class="card"><h2>⚡ What do you want to do?</h2><div class="qgrid">' +
         '<button class="qbtn" ' + goAttrs(body.go) + '>🧤<span>Today\'s training</span></button>' +
         '<button class="qbtn" data-act="go" data-view="bounce">🔄<span>Bounce back</span></button>' +
@@ -808,7 +808,6 @@
       '<div class="card tight"><strong>🧤 Today\'s drill:</strong> ' + esc(d.title) + ' <span class="muted">(' + d.mins + ' mins)</span> <button class="btn small" style="margin-top:8px" data-act="go" data-view="gk" data-sub="drills" data-drill="' + d.id + '">Open it</button></div>' +
       '<div class="card tight"><strong>🎣 Tip of the day:</strong> ' + esc(tip) + '</div>' +
       '<div class="card"><details><summary><span>⚙️ Captain settings</span></summary><div class="inner">' +
-        '<label for="setKit">My kit colour</label><select id="setKit">' + ['green', 'pink', 'yellow'].map(function (k) { return '<option value="' + k + '"' + (kitKey() === k ? ' selected' : '') + '>' + KVChar.KITS[k].name + ' goalkeeper kit</option>'; }).join('') + '</select>' +
         '<label><input type="checkbox" id="setMute"' + (state.mute ? ' checked' : '') + '> Mute sounds</label>' +
         '<label for="setSpotify">Spotify playlist or album link</label><input type="url" id="setSpotify" placeholder="Paste a Spotify link here" value="' + esc(state.spotify || '') + '">' +
         '<label for="setDream">My dream</label><input type="text" id="setDream" placeholder="e.g. Play in goal for Wigan Athletic first team" value="' + esc(state.dream) + '">' +
@@ -1715,31 +1714,43 @@
     var seen = false;
     try { seen = sessionStorage.getItem('kvSplash') === '1'; } catch (e) {}
     if (seen) { sp.classList.add('gone'); return; }
-    var P = $('#spParticles'), cols = ['#ffd23f', '#1d8fd0', '#e63329', '#ffffff', '#1f9d55'], i, html = '';
-    for (i = 0; i < 26; i++) {
-      html += '<i style="--x:' + Math.round(Math.random() * 100) + '%;--s:' + (3 + Math.round(Math.random() * 6)) + 'px;--c:' + cols[i % cols.length] + ';--d:' + (3 + Math.random() * 4).toFixed(1) + 's;--dl:-' + (Math.random() * 6).toFixed(1) + 's"></i>';
+    var P = $('#spParticles'), cols = ['#00e5ff', '#ff2bd6', '#ffd23f', '#ffffff'], i, html = '';
+    for (i = 0; i < 22; i++) {
+      html += '<i style="--x:' + Math.round(Math.random() * 100) + '%;--s:' + (2 + Math.round(Math.random() * 3)) + 'px;--c:' + cols[i % cols.length] + ';--d:' + (1.6 + Math.random() * 2.4).toFixed(1) + 's;--dl:-' + (Math.random() * 4).toFixed(1) + 's"></i>';
     }
     if (P) P.innerHTML = html;
-    var hero = $('#spHero'); if (hero) hero.innerHTML = figure('save');
-    var bar = $('#spBar'), st = $('#spStatus'), go = $('#spGo');
-    var msgs = ['Hoisting the sails...', 'Polishing the gloves...', 'Checking the tides...', 'Ready, Captain!'];
-    var step = 0;
+    var hero = $('#spHero'); if (hero) hero.innerHTML = '<img alt="" src="assets/ell_save.png">';
+    var bar = $('#spBar'), st = $('#spStatus'), go = $('#spGo'), pct = $('#spPct');
+    var cells = '';
+    for (i = 0; i < 10; i++) cells += '<i></i>';
+    if (bar) bar.innerHTML = cells;
+    var msgs = ['Booting up...', 'Warming up the gloves...', 'Locking on target...', 'Keeper online. Ready!'];
+    var n = 0;
     var timer = setInterval(function () {
-      step++;
-      if (bar) bar.style.width = Math.min(100, step * 25) + '%';
-      if (st) st.textContent = msgs[Math.min(step, 3)];
-      if (step <= 3) playTone(300 + step * 120, 0.06);
-      if (step >= 4) { clearInterval(timer); if (go) { go.disabled = false; go.focus && go.focus({ preventScroll: true }); } }
-    }, 450);
+      n++;
+      var cs = bar ? bar.children : [];
+      if (cs[n - 1]) cs[n - 1].className = 'on';
+      if (pct) pct.textContent = (n * 10) + '%';
+      if (st) st.textContent = msgs[Math.min(3, Math.floor((n - 1) / 3))];
+      if (n % 3 === 0) playTone(300 + n * 60, 0.05);
+      if (n >= 10) { clearInterval(timer); if (st) st.textContent = msgs[3]; if (go) { go.disabled = false; } }
+    }, 200);
     if (go) go.addEventListener('click', function () {
       if (go.disabled) return;
       var f = $('#spFlash');
+      sp.classList.add('cut');
       if (f) { f.classList.remove('go'); void f.offsetWidth; f.classList.add('go'); }
-      playTone(523, 0.1); setTimeout(function () { playTone(659, 0.1); }, 90); setTimeout(function () { playTone(880, 0.22); }, 180);
-      try { if (navigator.vibrate && !state.mute) navigator.vibrate(30); } catch (e) {}
+      sp.classList.remove('shake'); void sp.offsetWidth; sp.classList.add('shake');
+      if (!state.mute) {
+        try {
+          var a = new Audio('assets/intro.mp3'); a.volume = 0.85; window.kvIntro = a;
+          var pr = a.play(); if (pr && pr.catch) pr.catch(function () {});
+        } catch (e) {}
+      }
+      try { if (navigator.vibrate && !state.mute) navigator.vibrate([40, 30, 60]); } catch (e) {}
       try { sessionStorage.setItem('kvSplash', '1'); } catch (e) {}
-      sp.classList.add('out');
-      setTimeout(function () { sp.classList.add('gone'); }, 500);
+      setTimeout(function () { sp.classList.add('out'); }, 900);
+      setTimeout(function () { sp.classList.add('gone'); }, 1300);
     });
   }
 
