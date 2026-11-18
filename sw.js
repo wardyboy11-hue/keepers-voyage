@@ -1,11 +1,12 @@
 /* Service worker: caches the app shell so the app works offline.
    Bump CACHE when you change any file, so phones pick up the new version. */
-const CACHE = 'keepers-voyage-v2-tunes';
+const CACHE = 'keepers-voyage-v4-manga';
 const SHELL = [
   './',
   './index.html',
   './style.css',
   './app.js',
+  './keeper.js',
   './manifest.json',
   './icons/icon-192.png',
   './icons/icon-512.png',

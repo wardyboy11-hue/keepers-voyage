@@ -18,3 +18,9 @@ All the app files are in this folder. Upload the **contents** of this folder to 
 3. The custom logo will appear.
 
 Data stays on the phone only. Works offline after the first load.
+
+## Version 3 (splash and energy)
+Opening splash card once per launch (sound follows the mute setting), Deck episode opener, panel motion, sixth tab fixed. Cache name: keepers-voyage-v3-splash. Fixed two syntax slips and the missing go handler in app.js.
+
+## Version 4 (manga Ell)
+keeper.js draws Ell and his team mates as original SVG art. Kit colour (green, pink, yellow) is chosen in Captain settings. Team mate looks are placeholders in the CREW table at the top of keeper.js. Cache name: keepers-voyage-v4-manga.

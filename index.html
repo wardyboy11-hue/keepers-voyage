@@ -19,6 +19,27 @@
 </head>
 <body>
 
+<!-- Splash: shown once per launch, dismissed by LET'S GO -->
+<div id="splash" class="splash" role="dialog" aria-label="Welcome to Keeper's Voyage">
+  <div class="sp-rays" aria-hidden="true"></div>
+  <div class="sp-streaks" aria-hidden="true"></div>
+  <div class="sp-particles" id="spParticles" aria-hidden="true"></div>
+  <div class="sp-stage">
+    <img class="sp-wheel" src="assets/wheel.png" alt="" aria-hidden="true">
+    <div class="sp-hero" id="spHero"></div>
+    <div class="sp-impact" aria-hidden="true">SAVE!</div>
+  </div>
+  <div class="sp-title" aria-label="Keeper's Voyage">
+    <span class="sp-t1">KEEPER'S</span>
+    <span class="sp-t2">VOYAGE</span>
+  </div>
+  <div class="sp-sub">A goalkeeper's pirate adventure</div>
+  <div class="sp-load" aria-hidden="true"><i id="spBar"></i></div>
+  <div class="sp-status" id="spStatus">Hoisting the sails...</div>
+  <button class="sp-go" id="spGo" data-act="splashgo" disabled>LET'S GO!</button>
+  <div class="sp-flash" id="spFlash" aria-hidden="true"></div>
+</div>
+
 <!-- Top bar: XP and streak always visible -->
 <header class="topbar">
   <div class="brand"><span class="hat" aria-hidden="true">🧤</span><span>Keeper's Voyage</span></div>
@@ -58,6 +79,7 @@
   <div id="musicBody"></div>
 </div>
 
+<script src="keeper.js"></script>
 <script src="app.js"></script>
 </body>
 </html>

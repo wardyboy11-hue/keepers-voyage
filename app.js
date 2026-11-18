@@ -38,7 +38,7 @@
     coachNotes: [], matches: [], matchCheck: {}, wins: [],
     speed: { start: '', tests: [], done: {} },
     study: { scores: [], reading: [], mission: {} },
-    photos: { win: '', bounce: '' }, setbacks: [], mood: { date: '', v: '' }, clipNotes: [], mute: false, spotify: ''
+    photos: { win: '', bounce: '' }, setbacks: [], mood: { date: '', v: '' }, clipNotes: [], mute: false, spotify: '', kit: 'green'
   };
 
   function clone(o) { return JSON.parse(JSON.stringify(o)); }
@@ -501,8 +501,7 @@
       go: [{ t: 'Media links', view: 'media' }] },
     { k: ['scan', 'options', 'both sides', 'same way', 'rhythm', 'distribution', 'bounce', 'gino', 'isaac', 'trigger', 'feint'],
       a: 'Before you release, look both ways. Do not fall into always going the same side. Use the bounce into a dropping midfielder (Gino is excellent at this) or deliberately miss him as a feint and play direct to Isaac or Theo. Concentration on the trigger is what unlocks it. Practice scanning in training.',
-      go: [{ t: 'Squad notes', view: 'squad' }, { t: 'Keeper drills', view: 'gk', sub: 'drills' }] },
-      go: [{ t: 'Build a running session', view: 'fit', sub: 'builder', type: 'running' }] },
+      go: [{ t: 'Squad notes', view: 'squad' }, { t: 'Keeper drills', view: 'gk', sub: 'drills' }, { t: 'Build a running session', view: 'fit', sub: 'builder', type: 'running' }] },
     { k: ['stretch', 'sore', 'flexible', 'warm up', 'cool down', 'tight', 'ache', 'aching'],
       a: 'Five minutes of stretching a day keeps you loose. Hold each stretch for 30 seconds, breathe slowly, and never bounce. If something hurts rather than just feeling tight, tell a grown up.',
       go: [{ t: 'Daily stretch routine', view: 'fit', sub: 'stretch' }] },
@@ -557,7 +556,7 @@
     { q: 'You dive low to your side. Where should you land?', o: ['On your elbow', 'On the side of your body, hands behind the ball', 'On your face', 'On your back'], a: 1, e: 'Land on the side of the body, hip then ribs then shoulder, hands behind the ball.' },
     { q: 'You make a mistake and a goal goes in. What is the best next step?', o: ['Throw your gloves', 'Breathe out, say your cue word, set your feet for the next job', 'Blame the defender', 'Stop talking for the rest of the game'], a: 1, e: 'Reset in five seconds. The next ball is the only ball.' },
     { q: 'You are tall and a bit slow off the mark. What helps most?', o: ['Standing further back', 'Explosive first two steps and strength work', 'Only long kicks', 'Waiting for the shot'], a: 1, e: 'Short powerful first steps and building strength make a tall keeper quicker over a few metres.' },
-    { q: 'After a save, how quickly should you look to distribute?', o: ['Take as long as you like', 'Within three seconds if a good pass is on', 'Always wait for the referee', 'Only on goal kicks'], a: 1, e: 'Scan early, decide fast, and release calmly. Holding the ball too long invites pressure.' }
+    { q: 'After a save, how quickly should you look to distribute?', o: ['Take as long as you like', 'Within three seconds if a good pass is on', 'Always wait for the referee', 'Only on goal kicks'], a: 1, e: 'Scan early, decide fast, and release calmly. Holding the ball too long invites pressure.' },
     { q: 'You read the cross well, chose the right option, then fumbled the catch. Which part needs work?', o: ['Positioning', 'Game reading', 'Decision making', 'Technical execution (the handling)'], a: 3, e: 'Four things can go wrong: positioning, game reading, decision, technique. Name which one, then fix that one.' },
     { q: 'A striker is closing down your full back from behind. What do you call?', o: ['TIME!', 'MAN ON!', 'KEEPER!', 'UP!'], a: 1, e: 'MAN ON warns your teammate before the ball arrives.' },
     { q: 'What is the best way to deal with nerves before a match?', o: ['Ignore them completely', 'Slow breathing, then focus on your first job', 'Eat lots of sweets', 'Skip the warm up'], a: 1, e: 'Slow breathing calms your body. Butterflies mean you care.' },
@@ -606,13 +605,16 @@
 
 
   /* ----- Character sprites (original art) or photos (photos stay on this phone only) ----- */
+  function kitKey() { return (window.KVChar && KVChar.KITS[state.kit]) ? state.kit : 'green'; }
+  function figure(pose, extra) {
+    if (!window.KVChar) return '';
+    var o = { pose: pose, kit: kitKey(), label: 'Ell, the keeper' };
+    for (var x in extra) o[x] = extra[x];
+    return KVChar.svg(o);
+  }
   function charHtml(mood, big) {
     var m = MOODS[mood] || MOODS.ready;
-    var sprite = 'assets/char_' + (mood || 'ready') + '.png';
-    var src = mood === 'win' ? (state.photos.win || state.avatar) : mood === 'bounce' ? (state.photos.bounce || state.avatar) : state.avatar;
-    // Prefer uploaded photo if present, otherwise use original sprite
-    var imgSrc = src || sprite;
-    return '<div class="charcard ' + m.cls + (big ? ' big' : '') + '"><div class="toonwrap">' + (imgSrc ? '<img class="toon" alt="" src="' + esc(imgSrc) + '">' : '<span class="toonph">🧤</span>') + '</div><div class="speech">' + esc(m.say) + '</div></div>';
+    return '<div class="charcard ' + m.cls + (big ? ' big' : '') + '"><div class="kvfig">' + figure(mood === 'win' ? 'win' : mood === 'bounce' ? 'bounce' : 'ready') + '</div><div class="speech">' + esc(m.say) + '</div></div>';
   }
   function bounceStats() {
     var tot = state.setbacks.length, back = state.setbacks.filter(function (x) { return x.back; }).length;
@@ -635,7 +637,7 @@
     ];
     var html = '<div class="card"><h2>👥 9 a side squad notes</h2><p class="muted">These stay on your phone. Use them before matches to plan distribution.</p>';
     players.forEach(function (p) {
-      html += '<div class="card tight"><strong>' + esc(p.name) + '</strong> <span class="tag">' + esc(p.pos) + '</span><p>' + esc(p.notes) + '</p></div>';
+      html += '<div class="card tight mate"><div class="matefig">' + (window.KVChar ? KVChar.mate(p.name, p.pos === 'Other GK' ? 'ready' : 'ready', { bust: true }) : '') + '</div><div><strong>' + esc(p.name) + '</strong> <span class="tag">' + esc(p.pos) + '</span><p>' + esc(p.notes) + '</p></div></div>';
     });
     html += '<div class="card"><h3>🎯 Your key habits</h3><ul>' +
       '<li>Scan both options before you receive or release. Do not get into a rhythm of always going the same way.</li>' +
@@ -765,12 +767,17 @@
     }).join('');
 
     el.innerHTML =
-      '<div class="chapter">Chapter ' + chapter + '</div>' +
-      '<div class="arc">' + esc(p.arc) + '</div>' +
+      '<div class="episode"><span class="ep-tag">Episode ' + chapter + '</span>' +
+        '<div class="ep-title">' + esc(p.arc) + '</div>' +
+        '<p class="ep-line">' + (allDone ? 'Everything done today. Legend!' : 'Your crew is waiting, Captain. Ready?') + '</p>' +
+        '<button class="btn red ep-go" ' + goAttrs(body.go) + '>⚡ Start today\'s mission</button>' +
+        '<div class="ep-stats"><span class="tag red">🔥 ' + dispStreak() + '</span><span class="tag gold">🪙 ' + state.xp + '</span></div>' +
+        '<div class="ep-hero">' + figure(allDone ? 'win' : 'ready') + '</div>' +
+      '</div>' +
       '<div class="banner">' + esc(BANNERS[dayIndex() % BANNERS.length]) + '</div>' +
       '<div class="card poster">' +
         '<p class="wanted">WANTED</p><div class="sub">The keeper of the net</div>' +
-        '<div class="avatar">' + (state.avatar ? '<img alt="" src="' + esc(state.avatar) + '">' : '🧤') + '</div>' +
+        '<div class="avatar">' + (state.avatar ? '<img alt="" src="' + esc(state.avatar) + '">' : figure('ready', { bust: true })) + '</div>' +
         '<div class="rank">' + esc(state.name || 'Keeper') + ': ' + esc(r.name) + '</div>' +
         (state.dream ? '<div class="muted" style="font-weight:800">My dream: ' + esc(state.dream) + '</div>' : '') +
         '<div class="bounty"><small>BOUNTY</small>🪙 ' + state.xp + '</div>' +
@@ -779,6 +786,7 @@
         '<div class="row" style="justify-content:center;margin-top:10px"><span class="tag red">🔥 Streak ' + dispStreak() + '</span><span class="tag gold">Best ' + state.best + '</span><span class="tag">Logs this week: ' + weekCount + '</span></div>' +
       '</div>' +
       '<div class="card tight" style="text-align:center">' + charHtml(allDone ? 'win' : 'ready') + '<button class="btn small blue" data-act="go" data-view="bounce">Having a tough day? Bounce back</button></div>' +
+      '<div class="card tight"><h3 style="margin:0">Your crew</h3><div class="crew">' + ['Gino', 'Isaac', 'Archie', 'Harvey', 'Jax'].map(function (n) { return '<div style="text-align:center"><div class="matefig">' + (window.KVChar ? KVChar.mate(n, 'ready', { bust: true }) : '') + '</div><small>' + n + '</small></div>'; }).join('') + '</div><button class="btn small blue block" data-act="go" data-view="squad">Squad notes</button></div>' +
       '<div class="card"><h2>⚡ What do you want to do?</h2><div class="qgrid">' +
         '<button class="qbtn" ' + goAttrs(body.go) + '>🧤<span>Today\'s training</span></button>' +
         '<button class="qbtn" data-act="go" data-view="bounce">🔄<span>Bounce back</span></button>' +
@@ -800,6 +808,7 @@
       '<div class="card tight"><strong>🧤 Today\'s drill:</strong> ' + esc(d.title) + ' <span class="muted">(' + d.mins + ' mins)</span> <button class="btn small" style="margin-top:8px" data-act="go" data-view="gk" data-sub="drills" data-drill="' + d.id + '">Open it</button></div>' +
       '<div class="card tight"><strong>🎣 Tip of the day:</strong> ' + esc(tip) + '</div>' +
       '<div class="card"><details><summary><span>⚙️ Captain settings</span></summary><div class="inner">' +
+        '<label for="setKit">My kit colour</label><select id="setKit">' + ['green', 'pink', 'yellow'].map(function (k) { return '<option value="' + k + '"' + (kitKey() === k ? ' selected' : '') + '>' + KVChar.KITS[k].name + ' goalkeeper kit</option>'; }).join('') + '</select>' +
         '<label><input type="checkbox" id="setMute"' + (state.mute ? ' checked' : '') + '> Mute sounds</label>' +
         '<label for="setSpotify">Spotify playlist or album link</label><input type="url" id="setSpotify" placeholder="Paste a Spotify link here" value="' + esc(state.spotify || '') + '">' +
         '<label for="setDream">My dream</label><input type="text" id="setDream" placeholder="e.g. Play in goal for Wigan Athletic first team" value="' + esc(state.dream) + '">' +
@@ -1059,7 +1068,7 @@
   var STUDY_SUBS = [['mission', 'Mission'], ['arith', 'Maths'], ['spell', 'Spelling'], ['gps', 'Grammar'], ['read', 'Reading'], ['tools', 'Toolbox'], ['plan', 'SATs plan']];
   function renderStudy() {
     var el = $('#view-study');
-    el.innerHTML = '<div class="card tight" style="text-align:center"><img src="assets/char_study.png" alt="Studying" style="max-width:180px;height:auto"></div>' + seg(STUDY_SUBS, ui.studySub, 'studysub') + '<div id="studyBody"></div>';
+    el.innerHTML = '<div class="card tight" style="text-align:center"><div class="kvfig solo">' + figure('study') + '</div></div>' + seg(STUDY_SUBS, ui.studySub, 'studysub') + '<div id="studyBody"></div>';
     var b = $('#studyBody'), s = ui.studySub;
     if (s === 'mission') return studyMission(b);
     if (s === 'arith' || s === 'spell' || s === 'gps') return renderQuiz(b, s);
@@ -1243,7 +1252,7 @@
   var CHILL_SUBS = [['fish', '🎣 Fishing'], ['calm', '🌊 Calm corner'], ['media', '📺 Media']];
   function renderChill() {
     var el = $('#view-chill');
-    var header = ui.chillSub === 'fish' ? '<div class="card tight" style="text-align:center"><img src="assets/char_fishing.png" alt="Fishing" style="max-width:180px;height:auto"></div>' : '';
+    var header = ui.chillSub === 'fish' ? '<div class="card tight" style="text-align:center"><div class="kvfig solo">' + figure('fishing') + '</div></div>' : '';
     el.innerHTML = header + seg(CHILL_SUBS, ui.chillSub, 'chillsub') + '<div id="chillBody"></div>';
     var b = $('#chillBody');
     ({ fish: renderFish, calm: renderCalm, media: renderMedia })[ui.chillSub](b);
@@ -1458,6 +1467,7 @@
       var box2 = $('#musicPlayer'); if (box2) box2.hidden = true;
       return;
     }
+    if (act === 'go') { navigate(d); return; }
     if (act === 'trainsub') { ui.trainSub = d.sub; if (d.sub !== 'fit') stopStretch(); renderTrain(); return; }
     if (act === 'chillsub') { ui.chillSub = d.sub; if (d.sub !== 'calm') stopBreath(); renderChill(); return; }
     if (act === 'studysub') { ui.studySub = d.sub; if (!ui.quiz || ui.quiz.kind !== d.sub) ui.quiz = null; renderStudy(); return; }
@@ -1473,7 +1483,7 @@
       renderHome(); return;
     }
     if (act === 'savesettings') {
-      state.name = $('#setName').value.trim() || 'Ell'; state.dream = $('#setDream').value.trim(); state.gileroDay = $('#setGil').value; state.mute = $('#setMute').checked; state.spotify = ($('#setSpotify') || {}).value || ''; save(); toast('Saved'); renderHome(); return;
+      if ($('#setName')) state.name = $('#setName').value.trim() || 'Ell'; if ($('#setDream')) state.dream = $('#setDream').value.trim(); if ($('#setGil')) state.gileroDay = $('#setGil').value; if ($('#setMute')) state.mute = $('#setMute').checked; if ($('#setKit')) state.kit = $('#setKit').value; state.spotify = ($('#setSpotify') || {}).value || ''; save(); toast('Saved'); renderHome(); return;
     }
     if (act === 'clearavatar') { state.avatar = ''; save(); renderHome(); return; }
     if (act === 'export') { $('#backupBox').value = JSON.stringify(state); toast('Copy the text and keep it safe'); return; }
@@ -1698,7 +1708,43 @@
   });
 
   /* ---------- 5. START UP ---------- */
+  // ---------- Opening splash ----------
+  function initSplash() {
+    var sp = $('#splash');
+    if (!sp) return;
+    var seen = false;
+    try { seen = sessionStorage.getItem('kvSplash') === '1'; } catch (e) {}
+    if (seen) { sp.classList.add('gone'); return; }
+    var P = $('#spParticles'), cols = ['#ffd23f', '#1d8fd0', '#e63329', '#ffffff', '#1f9d55'], i, html = '';
+    for (i = 0; i < 26; i++) {
+      html += '<i style="--x:' + Math.round(Math.random() * 100) + '%;--s:' + (3 + Math.round(Math.random() * 6)) + 'px;--c:' + cols[i % cols.length] + ';--d:' + (3 + Math.random() * 4).toFixed(1) + 's;--dl:-' + (Math.random() * 6).toFixed(1) + 's"></i>';
+    }
+    if (P) P.innerHTML = html;
+    var hero = $('#spHero'); if (hero) hero.innerHTML = figure('save');
+    var bar = $('#spBar'), st = $('#spStatus'), go = $('#spGo');
+    var msgs = ['Hoisting the sails...', 'Polishing the gloves...', 'Checking the tides...', 'Ready, Captain!'];
+    var step = 0;
+    var timer = setInterval(function () {
+      step++;
+      if (bar) bar.style.width = Math.min(100, step * 25) + '%';
+      if (st) st.textContent = msgs[Math.min(step, 3)];
+      if (step <= 3) playTone(300 + step * 120, 0.06);
+      if (step >= 4) { clearInterval(timer); if (go) { go.disabled = false; go.focus && go.focus({ preventScroll: true }); } }
+    }, 450);
+    if (go) go.addEventListener('click', function () {
+      if (go.disabled) return;
+      var f = $('#spFlash');
+      if (f) { f.classList.remove('go'); void f.offsetWidth; f.classList.add('go'); }
+      playTone(523, 0.1); setTimeout(function () { playTone(659, 0.1); }, 90); setTimeout(function () { playTone(880, 0.22); }, 180);
+      try { if (navigator.vibrate && !state.mute) navigator.vibrate(30); } catch (e) {}
+      try { sessionStorage.setItem('kvSplash', '1'); } catch (e) {}
+      sp.classList.add('out');
+      setTimeout(function () { sp.classList.add('gone'); }, 500);
+    });
+  }
+
   function init() {
+    initSplash();
     save();
     updatePills();
     var h = (location.hash || '').replace('#', '');
