@@ -1,6 +1,6 @@
 /* Service worker: caches the app shell so the app works offline.
    Bump CACHE when you change any file, so phones pick up the new version. */
-const CACHE = 'keepers-voyage-v4-manga';
+const CACHE = 'keepers-voyage-v5-anime';
 const SHELL = [
   './',
   './index.html',
@@ -22,7 +22,16 @@ const SHELL = [
   './assets/crest.png',
   './assets/chest.png',
   './assets/wheel.png',
-  './assets/method_rig.png'
+  './assets/method_rig.png',
+  './assets/intro.mp3',
+  './assets/ell_save.png',
+  './assets/ell_ready.png',
+  './assets/ell_win.png',
+  './assets/ell_bounce.png',
+  './assets/ell_fishing.png',
+  './assets/ell_study.png',
+  './assets/ell_calm.png',
+  './assets/ell_crew.png'
 ];
 
 self.addEventListener('install', (e) => {

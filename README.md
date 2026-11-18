@@ -24,3 +24,6 @@ Opening splash card once per launch (sound follows the mute setting), Deck episo
 
 ## Version 4 (manga Ell)
 keeper.js draws Ell and his team mates as original SVG art. Kit colour (green, pink, yellow) is chosen in Captain settings. Team mate looks are placeholders in the CREW table at the top of keeper.js. Cache name: keepers-voyage-v4-manga.
+
+## Version 5: anime intro
+Real manga art of Ell (Artlist), black and neon splash with impact frames, screen shake, glitch title and intro music. Cache v5-anime. Only the green kit art exists, so the kit picker was removed.
