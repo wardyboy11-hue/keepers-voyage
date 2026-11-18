@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Keeper's Voyage</title>
+<meta name="description" content="A pirate adventure training log for a young goalkeeper: body, brain and downtime.">
+<meta name="theme-color" content="#0a1a33">
+
+<!-- iPhone: run full screen when added to the Home Screen -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Keeper's Voyage">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" href="icons/icon-192.png">
+<link rel="manifest" href="manifest.json">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- Top bar: XP and streak always visible -->
+<header class="topbar">
+  <div class="brand"><span class="hat" aria-hidden="true">🧤</span><span>Keeper's Voyage</span></div>
+  <div class="stats" aria-live="polite">
+    <span class="pill" id="pillXp" title="Doubloons earned">🪙 0</span>
+    <span class="pill" id="pillStreak" title="Day streak">🔥 0</span>
+  </div>
+</header>
+
+<!-- Five main views, each filled in by app.js -->
+<main id="app">
+  <section class="view" id="view-home"></section>
+  <section class="view" id="view-train"></section>
+  <section class="view" id="view-study"></section>
+  <section class="view" id="view-chill"></section>
+  <section class="view" id="view-coach"></section>
+</main>
+
+<div id="sfx" class="sfx" aria-hidden="true"></div>
+<div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<!-- Bottom tab bar: five big targets, easy for thumbs -->
+<nav class="tabbar" aria-label="Main">
+  <button data-act="go" data-view="home" class="tab"><span class="ico">🏠</span><span>Deck</span></button>
+  <button data-act="go" data-view="train" class="tab"><span class="ico">⚽</span><span>Train</span></button>
+  <button data-act="go" data-view="study" class="tab"><span class="ico">📚</span><span>Study</span></button>
+  <button data-act="go" data-view="chill" class="tab"><span class="ico">🎣</span><span>Chill</span></button>
+  <button data-act="go" data-view="coach" class="tab"><span class="ico">🦜</span><span>Coach</span></button>
+  <button data-act="music" class="tab" aria-label="Music"><span class="ico">🎵</span><span>Tunes</span></button>
+</nav>
+
+<div id="musicPlayer" class="music-player" hidden>
+  <div class="music-head">
+    <strong>Tunes</strong>
+    <button data-act="musicclose" class="btn small ghost">Close</button>
+  </div>
+  <div id="musicBody"></div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
